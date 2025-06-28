@@ -12,7 +12,7 @@ import (
 func main() {
 	app := fiber.New()
 
-	app.Static("/static", "./assets")
+	app.Static("/images", "./assets")
 
 	api := app.Group("/api")
 	v4 := api.Group("/v4")

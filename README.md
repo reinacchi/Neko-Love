@@ -35,11 +35,11 @@ This API **is not hosted by the original author**.
 
 ```json
 {
-  "url": "/static/neko/neko_04.png"
+  "url": "/images/neko/neko_04.png"
 }
 ```
 
-- Images are served at `/static/<category>/<image>`
+- Images are served at `/images/<category>/<image>`
 
 ---
 
@@ -107,7 +107,7 @@ Thanks to everyone who used the original Neko-Love, and to all those who want to
 
 ## 🔍 Example API Call
 
-To get a random image (returns `{ "url": "/static/neko/04.webp" }`):
+To get a random image (returns `{ "url": "/images/neko/04.webp" }`):
 
 ```
 GET http://localhost:3030/api/v4/neko
@@ -116,5 +116,5 @@ GET http://localhost:3030/api/v4/neko
 To access the image directly (after receiving the URL from the JSON response):
 
 ```
-http://localhost:3030/static/neko/04.webp
+http://localhost:3030/images/neko/04.webp
 ```

@@ -7,7 +7,7 @@ use crate::models::response::ImageResponse;
 use std::sync::Arc;
 use crate::services::image_service::ImageService;
 
-/// Handler for GET /images/{category}
+/// Handler for GET /api/v4/{category}
 /// Returns a random image from the specified category
 pub async fn get_random_image(
     Path(category): Path<String>,

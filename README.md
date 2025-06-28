@@ -1,6 +1,6 @@
 # Neko-Love API V4 (Rust / Axum Rewrite)
 
-> A community-driven rewrite of the original Neko-Love API, now built in Rust using the Axum web framework.
+> A community-driven reimplementation of the original Neko-Love API, now written in Rust using the Axum web framework.
 
 ---
 
@@ -89,7 +89,7 @@ Want to add a new image category?
 1. Create a folder inside `assets/<name>`
 2. Add your image files there
 
-No extra routes need to be added since they are managed automatically.
+No extra routes need to be added to the code since they are managed automatically.
 
 ---
 

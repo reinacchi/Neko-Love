@@ -1,6 +1,6 @@
-# Neko-Love API V4 (Go / Fiber Rewrite)
+# Neko-Love API V4 (Rust / Axum Rewrite)
 
-> A community-powered rewrite of the original Neko-Love API, rebuilt in Go with the Fiber web framework.
+> A community-driven reimplementation of the original Neko-Love API, now written in Rust using the Axum web framework.
 
 ---
 
@@ -8,7 +8,7 @@
 
 This project is a **modern reimplementation of the original Neko-Love API**, which was once hosted at `neko-love.xyz`. It served random anime-style images like "neko", "hug", "kiss", and more — often used in Discord bots, anime projects, and other community tools.
 
-The original API was written in Node.js using Koa. This version is a **fresh and solid base built with Go and the Fiber framework**, designed for others to easily clone, customize, and host themselves.
+The original API was written in Node.js using Koa. This version is a **fresh and solid base built with Rust and the Axum framework**, designed for others to easily clone, customize, and host themselves.
 
 ---
 
@@ -35,7 +35,8 @@ This API **is not hosted by the original author**.
 
 ```json
 {
-  "url": "/images/neko/neko_04.png"
+  "id": "01",
+  "url": "http://localhost:3030/images/neko/01.png"
 }
 ```
 
@@ -48,7 +49,7 @@ This API **is not hosted by the original author**.
 > After the original API was shut down, several community members asked if they could bring it back. Unfortunately, the original source code was lost. This rewrite aims to provide a fresh, modern foundation.
 
 - ✅ Easier to maintain
-- ✅ Fast and lightweight (Go + Fiber)
+- ✅ Fast and lightweight (Rust + Axum)
 - ✅ Clean structure for contributions
 
 ---
@@ -57,8 +58,8 @@ This API **is not hosted by the original author**.
 
 ### Requirements
 
-Make sure you have **Go installed** (version 1.18+ recommended):  
-→ [Download Go](https://golang.org/dl/)
+Make sure you have **Rust installed** (version 1.76+ recommended):  
+→ [Download Rust](https://www.rust-lang.org/tools/install)
 
 ---
 
@@ -67,20 +68,14 @@ Make sure you have **Go installed** (version 1.18+ recommended):
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/Otaku17/neko-love.git
-cd neko-love-go
+git clone https://github.com/Otaku17/Neko-Love.git
+cd Neko-Love
 ```
 
-2. Install dependencies:
+2. Run the API:
 
 ```bash
-go mod tidy
-```
-
-3. Run the API:
-
-```bash
-go run main.go
+cargo run
 ```
 
 4. Add your images in the corresponding folders inside the `assets/` directory (e.g. `assets/neko/`, `assets/hug/`, etc.)
@@ -93,13 +88,8 @@ Want to add a new image category?
 
 1. Create a folder inside `assets/<name>`
 2. Add your image files there
-3. Add a new route in `routes/image_routes.go`
 
-Example:
-
-```go
-v1.Get("/pat", handlers.GetRandomImage("assets/pat"))
-```
+No extra routes need to be added to the code since they are managed automatically.
 
 ---
 
@@ -107,14 +97,14 @@ Thanks to everyone who used the original Neko-Love, and to all those who want to
 
 ## 🔍 Example API Call
 
-To get a random image (returns `{ "url": "/images/neko/04.webp" }`):
+To get a random image (returns `{ "url": "/images/neko/01.png" }`):
 
-```
+```sh
 GET http://localhost:3030/api/v4/neko
 ```
 
 To access the image directly (after receiving the URL from the JSON response):
 
 ```
-http://localhost:3030/images/neko/04.webp
+http://localhost:3030/images/neko/01.png
 ```

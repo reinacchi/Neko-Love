@@ -2,6 +2,8 @@
 
 > A community-driven reimplementation of the original Neko-Love API, now written in Rust using the Axum web framework.
 
+- This project is a fork of [Otaku17/Neko-Love](https://github.com/Otaku17/Neko-Love).
+
 ---
 
 ## 🌟 What is this?
@@ -68,7 +70,7 @@ Make sure you have **Rust installed** (version 1.76+ recommended):
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/Otaku17/Neko-Love.git
+git clone https://github.com/reinacchi/Neko-Love.git
 cd Neko-Love
 ```
 

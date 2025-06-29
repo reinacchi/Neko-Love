@@ -6,6 +6,8 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.98"
 axum = "0.8.4"
+chrono = "0.4.41"
+colored = "3.0.0"
 dotenv = "0.15.0"
 rand = "0.9.1"
 serde = { version = "1.0.219", features = ["derive"] }

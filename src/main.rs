@@ -1,8 +1,10 @@
 mod app_state;
 mod handlers;
+mod logger;
 mod models;
 mod services;
 
+use axum::middleware;
 use axum::response::IntoResponse;
 use axum::{extract::Path, http::StatusCode, routing::get, Router};
 use dotenv::dotenv;
@@ -10,6 +12,7 @@ use std::env;
 use std::path::PathBuf;
 
 use crate::app_state::create_state;
+use crate::logger::log_requests;
 use crate::handlers::images::get_random_image;
 use crate::services::file_service::serve_file;
 
@@ -35,6 +38,7 @@ async fn main() {
                 }
             }),
         )
+        .layer(middleware::from_fn(log_requests))
         .with_state(state);
 
     let listener = tokio::net::TcpListener::bind(server_addr).await.unwrap();

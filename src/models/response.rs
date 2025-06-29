@@ -2,7 +2,7 @@ use serde::Serialize;
 
 /// The image response
 #[derive(Debug, Serialize)]
-pub struct ImageResponse {
+pub struct ApiResponse {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
     pub message: String,

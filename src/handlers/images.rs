@@ -3,7 +3,7 @@ use axum::{
     response::IntoResponse,
     Json, http::StatusCode,
 };
-use crate::models::response::ImageResponse;
+use crate::models::response::ApiResponse;
 use std::sync::Arc;
 use crate::services::image_service::ImageService;
 
@@ -15,7 +15,7 @@ pub async fn get_random_image(
 ) -> impl IntoResponse {
     match image_service.get_random_image(&category) {
         Ok((id, filename)) => {
-            let response = ImageResponse {
+            let response = ApiResponse {
                 id: Some(id.clone()),
                 message: "".into(),
                 success: true,
@@ -26,7 +26,7 @@ pub async fn get_random_image(
         }
         Err(e) => {
             eprintln!("Error getting random image: {}", e);
-            let response = ImageResponse {
+            let response = ApiResponse {
                 id: None,
                 message: "Unknown image category.".into(),
                 success: false,

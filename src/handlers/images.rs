@@ -19,7 +19,7 @@ pub async fn get_random_image(
                 id: id.clone(),
                 success: true,
                 status: StatusCode::OK.as_u16(),
-                url: image_service.build_image_url(&category, &filename),
+                url: image_service.build_image_url(&filename),
             };
             (StatusCode::OK, Json(response))
         }

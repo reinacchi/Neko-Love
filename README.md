@@ -38,11 +38,11 @@ This API **is not hosted by the original author**.
 ```json
 {
   "id": "01",
-  "url": "http://localhost:3030/images/neko/01.png"
+  "url": "http://localhost:3030/img/2025062909200084.png"
 }
 ```
 
-- Images are served at `/images/<category>/<image>`
+- Images are served at `/assets/<category>/<image>`
 
 ---
 
@@ -99,7 +99,7 @@ Thanks to everyone who used the original Neko-Love, and to all those who want to
 
 ## 🔍 Example API Call
 
-To get a random image (returns `{ "url": "/images/neko/01.png" }`):
+To get a random image (returns `{ "url": "/img/2025062909200084.png" }`):
 
 ```sh
 GET http://localhost:3030/api/v4/neko

@@ -27,8 +27,8 @@ impl ImageService {
     }
 
     /// Builds a full URL for an image given its category and filename
-    pub fn build_image_url(&self, category: &str, filename: &str) -> String {
-        format!("{}/images/{}/{}", self.base_url, category, filename)
+    pub fn build_image_url(&self, filename: &str) -> String {
+        format!("{}/img/{}", self.base_url, filename)
     }
 
     /// Gets a random image from the specified category
@@ -43,17 +43,15 @@ impl ImageService {
             anyhow::bail!("Category directory does not exist: {:?}", category_path);
         }
 
+        let entries = fs::read_dir(&category_path)?;
+
         let mut images = Vec::new();
-        for entry in fs::read_dir(&category_path)
-            .with_context(|| format!("Failed to read category directory: {:?}", category_path))?
-        {
+        for entry in entries {
             let entry = entry?;
             let path = entry.path();
-
             if path.is_file() {
                 if let Some(filename) = path.file_name().and_then(|n| n.to_str()) {
-                    let id = path
-                        .file_stem()
+                    let id = path.file_stem()
                         .and_then(|s| s.to_str())
                         .unwrap_or_default()
                         .to_string();

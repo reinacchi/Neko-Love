@@ -3,14 +3,15 @@ mod handlers;
 mod models;
 mod services;
 
-use axum::{routing::get, Router};
+use axum::response::IntoResponse;
+use axum::{extract::Path, http::StatusCode, routing::get, Router};
 use dotenv::dotenv;
 use std::env;
 use std::path::PathBuf;
-use tower_http::services::ServeDir;
 
 use crate::app_state::create_state;
 use crate::handlers::images::get_random_image;
+use crate::services::file_service::serve_file;
 
 #[tokio::main]
 async fn main() {
@@ -20,10 +21,20 @@ async fn main() {
     let assets_path = PathBuf::from("./assets");
     let base_url = env::var("BASE_URL").unwrap_or_else(|_| "http://localhost:3030".into());
     let state = create_state(assets_path, base_url).unwrap();
-    
+
     let app = Router::new()
         .route("/api/v4/{category}", get(get_random_image))
-        .nest_service("/images", ServeDir::new("assets"))
+        .route(
+            "/img/{filename}",
+            get(|Path(filename): Path<String>| async move {
+                match serve_file(filename).await {
+                    Ok(res) => res,
+                    Err(_) => {
+                        (StatusCode::INTERNAL_SERVER_ERROR, "Internal server error").into_response()
+                    }
+                }
+            }),
+        )
         .with_state(state);
 
     let listener = tokio::net::TcpListener::bind(server_addr).await.unwrap();

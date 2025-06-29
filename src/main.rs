@@ -4,6 +4,7 @@ mod logger;
 mod models;
 mod services;
 
+use axum::extract::State;
 use axum::{middleware, routing, Json};
 use axum::response::IntoResponse;
 use axum::{
@@ -30,6 +31,7 @@ async fn main() {
     let assets_path = PathBuf::from("./assets");
     let base_url = env::var("BASE_URL").unwrap_or_else(|_| "http://localhost:3030".into());
     let state = create_state(assets_path, base_url).unwrap();
+    let image_service = state.image_service.clone();
 
     let app = Router::new()
         .route("/api/v4/{content_type}/{category}", get(get_random_image))
@@ -47,7 +49,7 @@ async fn main() {
         .route(
             "/img/{filename}",
             get(|Path(filename): Path<String>| async move {
-                match serve_file(filename).await {
+                match serve_file(State(state), filename).await {
                     Ok(res) => res,
                     Err(_) => {
                         (StatusCode::INTERNAL_SERVER_ERROR, "Internal server error").into_response()
@@ -56,7 +58,7 @@ async fn main() {
             }),
         )
         .layer(middleware::from_fn(log_requests))
-        .with_state(state);
+        .with_state(image_service);
 
     let listener = tokio::net::TcpListener::bind(server_addr).await.unwrap();
     println!(

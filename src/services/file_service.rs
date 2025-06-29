@@ -1,15 +1,27 @@
 use axum::{
     body::Body,
-    http::{Request, StatusCode},
+    extract::State,
+    http::StatusCode,
     response::Response,
 };
+use bytes::Bytes;
 use std::{fs, path::PathBuf};
-use tower_http::services::ServeFile;
 
+use crate::app_state::AppState;
 use crate::models::response::ApiResponse;
 
 /// Serves a file from either ./assets/sfw or ./assets/nsfw subdirectories
-pub async fn serve_file(filename: String) -> Result<Response<Body>, anyhow::Error> {
+pub async fn serve_file(
+    State(state): State<AppState>,
+    filename: String,
+) -> Result<Response<Body>, anyhow::Error> {
+    if let Some(cached) = state.cache.get(&filename).await {
+        return Ok(Response::builder()
+            .header("Content-Type", "image/png")
+            .body(Body::from(cached))
+            .unwrap());
+    }
+
     let content_types = ["sfw", "nsfw"];
     let assets_base = PathBuf::from("./assets");
 
@@ -22,17 +34,15 @@ pub async fn serve_file(filename: String) -> Result<Response<Body>, anyhow::Erro
                 if category_path.is_dir() {
                     let potential_path = category_path.join(&filename);
                     if potential_path.exists() {
-                        let mut service = ServeFile::new(potential_path);
-                        let request = Request::builder()
-                            .body(Body::empty())
-                            .map_err(|e| anyhow::anyhow!(e))?;
+                        let bytes = tokio::fs::read(&potential_path).await?;
+                        let response = Response::builder()
+                            .header("Content-Type", "image/png") // optional: guess from extension
+                            .body(Body::from(bytes.clone()))
+                            .unwrap();
 
-                        let response = service
-                            .try_call(request)
-                            .await
-                            .map_err(|e| anyhow::anyhow!(e))?;
+                        state.cache.insert(filename.clone(), Bytes::from(bytes)).await;
 
-                        return Ok(response.map(Body::new));
+                        return Ok(response);
                     }
                 }
             }

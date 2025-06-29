@@ -6,7 +6,7 @@ use std::{fs, path::PathBuf};
 use crate::app_state::AppState;
 use crate::models::response::ApiResponse;
 
-/// Serves a file from either ./assets/sfw or ./assets/nsfw subdirectories
+/// Serves a file from either `/assets/sfw` or `/assets/nsfw` subdirectories
 pub async fn serve_file(
     State(state): State<AppState>,
     filename: String,

@@ -1,7 +1,7 @@
 use axum::{
     extract::{Path, State},
     response::IntoResponse,
-    Json,
+    Json, http::StatusCode,
 };
 use crate::models::response::ImageResponse;
 use std::sync::Arc;
@@ -15,17 +15,23 @@ pub async fn get_random_image(
 ) -> impl IntoResponse {
     match image_service.get_random_image(&category) {
         Ok((id, filename)) => {
-            Json(ImageResponse {
+            let response = ImageResponse {
                 id: id.clone(),
+                success: true,
+                status: StatusCode::OK.as_u16(),
                 url: image_service.build_image_url(&category, &filename),
-            })
+            };
+            (StatusCode::OK, Json(response))
         }
         Err(e) => {
             eprintln!("Error getting random image: {}", e);
-            Json(ImageResponse {
-                id: "default".into(),
+            let response = ImageResponse {
+                id: "".into(),
+                success: false,
+                status: StatusCode::NOT_FOUND.as_u16(),
                 url: "".into(),
-            })
+            };
+            (StatusCode::NOT_FOUND, Json(response))
         }
     }
 }

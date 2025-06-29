@@ -36,7 +36,7 @@ pub async fn log_requests(req: Request<Body>, next: Next) -> Response {
         "[{}] {} {} {} {}ms",
         timestamp.dimmed(),
         method_colored,
-        path,
+        path.bright_cyan(),
         status_colored,
         duration.as_millis().to_string().purple()
     );

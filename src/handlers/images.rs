@@ -16,22 +16,24 @@ pub async fn get_random_image(
     match image_service.get_random_image(&category) {
         Ok((id, filename)) => {
             let response = ImageResponse {
-                id: id.clone(),
+                id: Some(id.clone()),
+                message: "".into(),
                 success: true,
                 status: StatusCode::OK.as_u16(),
-                url: image_service.build_image_url(&filename),
+                url: Some(image_service.build_image_url(&filename)),
             };
             (StatusCode::OK, Json(response))
         }
         Err(e) => {
             eprintln!("Error getting random image: {}", e);
             let response = ImageResponse {
-                id: "".into(),
+                id: None,
+                message: "Unknown image category.".into(),
                 success: false,
-                status: StatusCode::NOT_FOUND.as_u16(),
-                url: "".into(),
+                status: StatusCode::BAD_REQUEST.as_u16(),
+                url: None,
             };
-            (StatusCode::NOT_FOUND, Json(response))
+            (StatusCode::BAD_REQUEST, Json(response))
         }
     }
 }

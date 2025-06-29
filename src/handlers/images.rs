@@ -10,10 +10,10 @@ use crate::services::image_service::ImageService;
 /// Handler for GET /api/v4/{category}
 /// Returns a random image from the specified category
 pub async fn get_random_image(
-    Path(category): Path<String>,
+    Path((content_type, category)): Path<(String, String)>,
     State(image_service): State<Arc<ImageService>>,
 ) -> impl IntoResponse {
-    match image_service.get_random_image(&category) {
+    match image_service.get_random_image(&content_type, &category) {
         Ok((id, filename)) => {
             let response = ApiResponse {
                 id: Some(id.clone()),

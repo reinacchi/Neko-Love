@@ -32,12 +32,17 @@ impl ImageService {
     }
 
     /// Gets a random image from the specified category
-    pub fn get_random_image(&self, category: &str) -> Result<(String, String)> {
+    pub fn get_random_image(&self, content_type: &str, category: &str) -> Result<(String, String)> {
+         let content_dir = match content_type {
+            "sfw" | "nsfw" => content_type,
+            _ => anyhow::bail!("Invalid content type. Must be 'sfw' or 'nsfw'"),
+        };
+
         if category.contains("..") || category.contains('/') || category.contains('\\') {
             anyhow::bail!("Invalid category name: {}", category);
         }
 
-        let category_path = self.assets_path.join(category);
+        let category_path = self.assets_path.join(content_dir).join(category);
 
         if !category_path.exists() {
             anyhow::bail!("Category directory does not exist: {:?}", category_path);

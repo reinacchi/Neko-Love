@@ -32,8 +32,8 @@ async fn main() {
     let state = create_state(assets_path, base_url).unwrap();
 
     let app = Router::new()
-        .route("/api/v4/{category}", get(get_random_image))
-        .route("/api/v4/{category}", routing::any(|| async {
+        .route("/api/v4/{content_type}/{category}", get(get_random_image))
+        .route("/api/v4/{content_type}/{category}", routing::any(|| async {
             let response = ApiResponse {
                 id: None,
                 message: "Method not allowed.".into(),

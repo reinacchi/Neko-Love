@@ -1,10 +1,6 @@
-use axum::{
-    body::Body,
-    extract::State,
-    http::StatusCode,
-    response::Response,
-};
+use axum::{body::Body, extract::State, http::StatusCode, response::Response};
 use bytes::Bytes;
+use mime_guess::from_path;
 use std::{fs, path::PathBuf};
 
 use crate::app_state::AppState;
@@ -15,9 +11,11 @@ pub async fn serve_file(
     State(state): State<AppState>,
     filename: String,
 ) -> Result<Response<Body>, anyhow::Error> {
+    let mime = from_path(&filename).first_or_octet_stream();
+
     if let Some(cached) = state.cache.get(&filename).await {
         return Ok(Response::builder()
-            .header("Content-Type", "image/png")
+            .header("Content-Type", mime.as_ref())
             .body(Body::from(cached))
             .unwrap());
     }
@@ -36,11 +34,14 @@ pub async fn serve_file(
                     if potential_path.exists() {
                         let bytes = tokio::fs::read(&potential_path).await?;
                         let response = Response::builder()
-                            .header("Content-Type", "image/png") // optional: guess from extension
+                            .header("Content-Type", mime.as_ref())
                             .body(Body::from(bytes.clone()))
                             .unwrap();
 
-                        state.cache.insert(filename.clone(), Bytes::from(bytes)).await;
+                        state
+                            .cache
+                            .insert(filename.clone(), Bytes::from(bytes))
+                            .await;
 
                         return Ok(response);
                     }

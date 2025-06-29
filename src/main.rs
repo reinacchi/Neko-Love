@@ -5,14 +5,9 @@ mod models;
 mod services;
 
 use axum::extract::State;
-use axum::{middleware, routing, Json};
 use axum::response::IntoResponse;
-use axum::{
-    extract::Path,
-    http::StatusCode,
-    routing::get,
-    Router,
-};
+use axum::{extract::Path, http::StatusCode, routing::get, Router};
+use axum::{middleware, routing, Json};
 use dotenv::dotenv;
 use std::env;
 use std::path::PathBuf;
@@ -35,17 +30,20 @@ async fn main() {
 
     let app = Router::new()
         .route("/api/v4/{content_type}/{category}", get(get_random_image))
-        .route("/api/v4/{content_type}/{category}", routing::any(|| async {
-            let response = ApiResponse {
-                id: None,
-                message: "Method not allowed.".into(),
-                success: false,
-                status: StatusCode::METHOD_NOT_ALLOWED.as_u16(),
-                url: None
-            };
+        .route(
+            "/api/v4/{content_type}/{category}",
+            routing::any(|| async {
+                let response = ApiResponse {
+                    id: None,
+                    message: "Method not allowed.".into(),
+                    success: false,
+                    status: StatusCode::METHOD_NOT_ALLOWED.as_u16(),
+                    url: None,
+                };
 
-            (StatusCode::METHOD_NOT_ALLOWED, Json(response))
-        }))
+                (StatusCode::METHOD_NOT_ALLOWED, Json(response))
+            }),
+        )
         .route(
             "/img/{filename}",
             get(|Path(filename): Path<String>| async move {

@@ -10,6 +10,7 @@ bytes = "1.10.1"
 chrono = "0.4.41"
 colored = "3.0.0"
 dotenv = "0.15.0"
+mime_guess = "2.0.5"
 moka = { version = "0.12.10", features = ["future"] }
 rand = "0.9.1"
 serde = { version = "1.0.219", features = ["derive"] }
